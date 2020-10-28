@@ -1,0 +1,79 @@
+def ocrpath_set():
+        """Tesseract-OCRフォルダのPathを取得し環境変数に追加"""
+        path_tesseract = Path(__file__).parent
+        path_tesseract = os.path.dirname(path_tesseract).split('\\')[0:-2]
+        path_tesseract = '\\'.join(path_tesseract)
+        path_tesseract = os.path.join(path_tesseract, 'res', 'Tesseract-OCR')
+        
+        if path_tesseract not in os.environ["PATH"].split(os.pathsep):
+            os.environ["PATH"] += os.pathsep + path_tesseract
+
+    def debug_test():
+        monitor = Monitor()
+        monitor.start()
+        x, y, w, h = monitor.draw_position()
+        aaa = start_ocr(x, y, w, h)
+        return aaa
+
+    def start_ocr(x, y, w, h):
+        """与えられた範囲内の画像を取得し、画像内にある言語を解析し抽出する。
+
+        Returns:
+            True: 
+                result (str): 画像から解析した文字列
+            False:
+                None
+        """
+        # 入力値判定
+        if w == 0 or h == 0:
+            print("error")
+            return None
+
+        ocrpath_set()
+
+        # 指定した範囲の画像取得
+        img_org = pyautogui.screenshot(region = (x, y, w, h))
+
+        img_rgb = img_org.convert('RGB')
+        img_w, img_h = img_rgb.size
+        if img_w  < 600 or img_h < 600:
+            img_rgb.resize((img_w * 2, img_h * 2), Image.NEAREST)
+        
+        enhancer = ImageEnhance.Sharpness(img_rgb)
+        img_rgb = enhancer.enhance(4.0)
+        pixels = img_rgb.load()
+
+        # 原稿画像加工（黒っぽい色以外は白=255,255,255にする）
+        c_max = 140
+        for j in range(img_rgb.size[1]):
+            for i in range(img_rgb.size[0]):
+                if (pixels[i, j][0] > c_max or pixels[i, j][1] > c_max or
+                        pixels[i, j][0] > c_max):
+                    pixels[i, j] = (255, 255, 255)
+
+        # OCRエンジンの取得
+        tools = pyocr.get_available_tools()
+        tool = tools[0]
+
+        # OCR実行
+        builder = pyocr.builders.TextBuilder()
+        result = tool.image_to_string(img_rgb, lang="eng", builder=builder)
+        print(result, type(result))
+        # with open('./eng.txt', mode='w') as f:
+        #     f.write(result)
+        return result
+
+    def text_translator(ocr_text):
+        """翻訳
+
+        Args:
+            ocr_text (str): 翻訳前文字列
+
+        Returns:
+            result_translator (str): 翻訳語文字列
+        """
+        translator = Translator()
+        result_translator = translator.translate(ocr_text ,src='en', dest='ja')
+        return result_translator
+        # with open('./jap.txt', mode='w', encoding='utf-8') as f:
+        #     f.write(result_translator.text)
