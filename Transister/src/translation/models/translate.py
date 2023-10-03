@@ -76,18 +76,19 @@ def start_ocr(recognition: Recognition, x, y, w, h):
         recognition.ocr_txt = tool.image_to_string(img_rgb, lang="eng", builder=builder)
         
         translator = Translator()
-        recognition.trans_txt = translator.translate(recognition.ocr_txt ,src='en', dest='ja')
+        recognition.trans_txt = translator.translate(recognition.ocr_txt ,src='en', dest='ja').text
         # with open('./eng.txt', mode='w') as f:
         #     f.write(result)
         # with open('./jap.txt', mode='w', encoding='utf-8') as f:
         #     f.write(result_translator.text)
 
-# def debug_test():
-#     monitor = Monitor()
-#     monitor.start()
-#     x, y, w, h = monitor.draw_position()
-#     aaa = start_ocr(x, y, w, h)
-#     return aaa
+def debug_test():
+    monitor = Monitor()
+    monitor.start()
+    recong = Recognition()
+    x, y, w, h = monitor.draw_position()
+    start_ocr(recong, x, y, w, h)
+    return recong.trans_txt
 
 
 

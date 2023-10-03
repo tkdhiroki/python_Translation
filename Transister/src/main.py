@@ -1,4 +1,4 @@
-import translation.views.tkintergui
+# import translation.views.tkintergui
 import translation.models.translate
 
 # translation.views.tkintergui.start_tkinter()
