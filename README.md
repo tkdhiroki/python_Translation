@@ -6,7 +6,7 @@ pyocr（Tesseract-OCR）を用いて、指定したPC画面内の英文を翻訳
 - Windows
 - Python 3.6
 - Visual Studio Code
-- [Tesseract-OCR]([https://pages.github.com/](https://github.com/tesseract-ocr/tesseract))
+- [Tesseract-OCR](https://github.com/tesseract-ocr/tesseract)
 ### pythonモジュール
 - pyocr
 - PIL
