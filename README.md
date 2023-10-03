@@ -1,4 +1,6 @@
 # python_Translation
+![gif](https://github.com/tkdhiroki/python_Translation/blob/main/Transister/res/translate_run_output_image.gif)
+
 ## 概要
 pyocr（Tesseract-OCR）を用いて、指定したPC画面内の英文を翻訳するアプリケーション。
 
